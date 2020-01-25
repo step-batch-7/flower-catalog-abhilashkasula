@@ -17,5 +17,14 @@
 }
 
 .content {
+  padding-top: 85px;
   padding-left: 5px;
+}
+
+#can:hover {
+  cursor: pointer;
+}
+
+.image {
+  border: solid 1px black;
 }
