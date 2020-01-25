@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Abeliophyllum</title>
+    <link rel="stylesheet" href="css/index.css" />
+  </head>
+  <body>
+    <h1 id="guest-header"><a href="/"><<</a>Guest Book</h1>
+    <h1> Leave a comment</h1>
+    <form action="saveComment" method="POST">
+      Name: <input type="text" name="name"></br>
+      Comment: <textarea name="comment" cols="40" rows="4"></textarea></br>
+      <button formaction="saveComment">Submit</button>
+    </form>
+    <hr>
+    <table>
+      <thead class="table-columns">
+        <td>DATETIME</td>
+        <td>NAME</td>
+        <td>COMMENTS_LIST</td>
+      </thead>
+      <tbody id="column-values"></tbody>
+    </table>
+  </body>
+</html>

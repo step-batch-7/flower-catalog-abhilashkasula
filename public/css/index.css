@@ -28,3 +28,21 @@
 .image {
   border: solid 1px black;
 }
+
+#guest-header {
+  text-align: center;
+  padding: 0px 0px 15px 0px ;
+  margin-bottom: 10px;
+  color: rgb(246, 168, 95);
+}
+
+button {
+  height: fit-content;
+  font-size: 15px;
+  border-radius: 3px;
+  background: linear-gradient(#fff, #ccc);
+}
+
+.table-columns td {
+  padding-right: 30px;
+}
