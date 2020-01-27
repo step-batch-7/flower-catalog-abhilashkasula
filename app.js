@@ -4,11 +4,7 @@ const CONTENT_TYPES = require('./lib/mimeTypes');
 const {loadTemplate} = require('./lib/viewTemplate');
 const STATIC_FOLDER = `${__dirname}/public`;
 
-const symbols = {
-  '\\+':' ',
-  '%0D%0A' : '\n',
-  '%21':'!'
-};
+const SYMBOLS = require('./lib/symbols');
 
 const serveStaticFile = (req, optionalUrl) => {
   const path = `${STATIC_FOLDER}${optionalUrl || req.url}`;
@@ -43,16 +39,15 @@ const redirectTo = function(url) {
 
 const replaceUnknownChars = function(text, character) {
   const regEx = new RegExp(`${character}`, 'g');
-  return text.replace(regEx, symbols[character]);
+  return text.replace(regEx, SYMBOLS[character]);
 };
 
 const saveCommentAndRedirect = function(req) {
   const comments = loadComments();
   const date = new Date();
   const {name, comment} = req.body;
-  const keys = Object.keys(symbols);
-  const commentText = keys.reduce(replaceUnknownChars, comment);
-  const nameText = keys.reduce(replaceUnknownChars, name);
+  const keys = Object.keys(SYMBOLS);
+  const [nameText, commentText] = [name, comment].map(text => keys.reduce(replaceUnknownChars, text));
   comments.push({date, name: nameText, comment: commentText});
   fs.writeFileSync('./data/comments.json',JSON.stringify(comments), 'utf8');
   return redirectTo('/guestBook.html');
