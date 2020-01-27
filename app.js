@@ -27,24 +27,28 @@ const loadComments = function() {
   return [];
 };
 
+const redirectTo = function(url) {
+  const res = new Response();
+  res.setHeader('Location', '/guestBook.html');
+  res.setHeader('Content-Length', 0);
+  res.statusCode = 301;
+  return res;
+}
+
 const saveCommentAndRedirect = function(req) {
   const comments = loadComments();
   const date = new Date().toGMTString();
   const {name, comment} = req.body;
   comments.push({date, name, comment});
   fs.writeFileSync('./data/comments.json',JSON.stringify(comments), 'utf8');
-  const res = new Response();
-  res.setHeader('Location', '/guestBook.html');
-  res.setHeader('Content-Length', 0);
-  res.statusCode = 301;
-  return res;
+  return redirectTo('/guestBook.html');
 };
 
 const generateComment = function(commentsHtml, commentDetail) {
-  const comment = commentDetail.comment.replace(/\+/g, ' ');
+  const comment = commentDetail.comment.replace(/\+/g, ' ').replace(/%0D%0A/g, '</br>');
   const html = `<tbody><td>${commentDetail.date}</td>
     <td>${commentDetail.name}</td>
-    <td>${comment}</td></tbody>`;
+    <td class="comment">${comment}</td></tbody>`;
   return html + commentsHtml;
 };
 
