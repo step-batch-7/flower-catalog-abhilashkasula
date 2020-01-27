@@ -44,9 +44,15 @@ button {
 }
 
 #comments-table thead td {
-  padding-right: 200px;
+  /* padding-right: 200px; */
 }
 
 #comments-table  td {
-  padding-bottom: 10px;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+#comments-table {
+  width: 100%;
+  border: 1px solid black;
 }

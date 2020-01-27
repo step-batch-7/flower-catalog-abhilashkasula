@@ -3,7 +3,6 @@ const Response = require('./lib/response');
 const CONTENT_TYPES = require('./lib/mimeTypes');
 const {loadTemplate} = require('./lib/viewTemplate');
 const STATIC_FOLDER = `${__dirname}/public`;
-
 const SYMBOLS = require('./lib/symbols');
 
 const serveStaticFile = (req, optionalUrl) => {
