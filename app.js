@@ -48,7 +48,7 @@ const replaceUnknownChars = function(text, character) {
 
 const saveCommentAndRedirect = function(req) {
   const comments = loadComments();
-  const date = new Date().toGMTString();
+  const date = new Date();
   const {name, comment} = req.body;
   const keys = Object.keys(symbols);
   const commentText = keys.reduce(replaceUnknownChars, comment);
@@ -59,10 +59,11 @@ const saveCommentAndRedirect = function(req) {
 };
 
 const generateComment = function(commentsHtml, commentDetail) {
-  const comment = commentDetail.comment.replace(/\n/g, '</br>');
-  const html = `<tbody><td>${commentDetail.date}</td>
-    <td>${commentDetail.name}</td>
-    <td class="comment">${comment}</td></tbody>`;
+  const {date, comment, name} = commentDetail;
+  const originalComment = comment.replace(/\n/g, '</br>');
+  const html = `<tbody><td>${new Date(date).toGMTString()}</td>
+    <td>${name}</td>
+    <td class="comment">${originalComment}</td></tbody>`;
   return html + commentsHtml;
 };
 
