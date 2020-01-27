@@ -43,10 +43,6 @@ button {
   background: linear-gradient(#fff, #ccc);
 }
 
-#comments-table thead td {
-  /* padding-right: 200px; */
-}
-
 #comments-table  td {
   padding: 10px;
   border: 1px solid black;
