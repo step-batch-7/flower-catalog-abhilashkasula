@@ -33,20 +33,24 @@ const saveCommentAndRedirect = function(req) {
   const {name, comment} = req.body;
   comments.push({date, name, comment});
   fs.writeFileSync('./data/comments.json',JSON.stringify(comments), 'utf8');
-  return serveGuestBookPage(req);
+  const res = new Response();
+  res.setHeader('Location', '/guestBook.html');
+  res.setHeader('Content-Length', 0);
+  res.statusCode = 301;
+  return res;
+};
+
+const generateComment = function(commentsHtml, commentDetail) {
+  const comment = commentDetail.comment.replace(/\+/g, ' ');
+  const html = `<tbody><td>${commentDetail.date}</td>
+    <td>${commentDetail.name}</td>
+    <td>${comment}</td></tbody>`;
+  return html + commentsHtml;
 };
 
 const generateComments = () => {
   const comments = loadComments();
-  const generateComment = function(commentsHtml, comment) {
-    const html = `<tbody><td>${comment.date}</td>
-      <td>${comment.name}</td>
-      <td>${comment.comment}</td></tbody>`;
-    return html + commentsHtml;
-  };
-  const html = comments.reduce(generateComment,'');
-  console.log(html);
-  return html;
+  return comments.reduce(generateComment,'');
 };
 
 const serveHomePage = function(req) {

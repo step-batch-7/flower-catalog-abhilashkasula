@@ -12,8 +12,8 @@
     <h1 id="guest-header"><a href="/"><<</a>Guest Book</h1>
     <h1> Leave a comment</h1>
     <form action="saveComment" method="POST">
-      Name: <input type="text" name="name"></br>
-      Comment: <textarea name="comment" cols="40" rows="4" onkeypress="submitOnEnter(event)"></textarea></br>
+      Name: <input type="text" name="name" required></br>
+      Comment: <textarea name="comment" cols="40" rows="4" onkeypress="submitOnEnter(event)" required></textarea></br>
       <button id="submit" formaction="saveComment">Submit</button>
     </form>
     <hr>
