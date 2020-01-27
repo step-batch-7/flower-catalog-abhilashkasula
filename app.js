@@ -4,6 +4,12 @@ const CONTENT_TYPES = require('./lib/mimeTypes');
 const {loadTemplate} = require('./lib/viewTemplate');
 const STATIC_FOLDER = `${__dirname}/public`;
 
+const symbols = {
+  '\\+':' ',
+  '%0D%0A' : '\n',
+  '%21':'!'
+};
+
 const serveStaticFile = (req, optionalUrl) => {
   const path = `${STATIC_FOLDER}${optionalUrl || req.url}`;
   const stat = fs.existsSync(path) && fs.statSync(path);
@@ -35,17 +41,25 @@ const redirectTo = function(url) {
   return res;
 }
 
+const replaceUnknownChars = function(text, character) {
+  const regEx = new RegExp(`${character}`, 'g');
+  return text.replace(regEx, symbols[character]);
+};
+
 const saveCommentAndRedirect = function(req) {
   const comments = loadComments();
   const date = new Date().toGMTString();
   const {name, comment} = req.body;
-  comments.push({date, name, comment});
+  const keys = Object.keys(symbols);
+  const commentText = keys.reduce(replaceUnknownChars, comment);
+  const nameText = keys.reduce(replaceUnknownChars, name);
+  comments.push({date, name: nameText, comment: commentText});
   fs.writeFileSync('./data/comments.json',JSON.stringify(comments), 'utf8');
   return redirectTo('/guestBook.html');
 };
 
 const generateComment = function(commentsHtml, commentDetail) {
-  const comment = commentDetail.comment.replace(/\+/g, ' ').replace(/%0D%0A/g, '</br>');
+  const comment = commentDetail.comment.replace(/\n/g, '</br>');
   const html = `<tbody><td>${commentDetail.date}</td>
     <td>${commentDetail.name}</td>
     <td class="comment">${comment}</td></tbody>`;
