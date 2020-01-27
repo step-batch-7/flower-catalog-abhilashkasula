@@ -19,8 +19,16 @@ const serveStaticFile = (req, optionalUrl) => {
   return res;
 }
 
+const loadComments = function() {
+  const COMMENTS_PATH = './data/comments.json';
+  if(fs.existsSync(COMMENTS_PATH)) {
+    return JSON.parse(fs.readFileSync('./data/comments.json'));
+  }
+  return [];
+};
+
 const saveCommentAndRedirect = function(req) {
-  const comments = JSON.parse(fs.readFileSync('./data/comments.json'));
+  const comments = loadComments();
   const date = new Date().toGMTString();
   const {name, comment} = req.body;
   comments.push({date, name, comment});
@@ -29,7 +37,7 @@ const saveCommentAndRedirect = function(req) {
 };
 
 const generateComments = () => {
-  const comments = JSON.parse(fs.readFileSync('./data/comments.json'));
+  const comments = loadComments();
   const generateComment = function(commentsHtml, comment) {
     const html = `<tbody><td>${comment.date}</td>
       <td>${comment.name}</td>
