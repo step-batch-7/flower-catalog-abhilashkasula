@@ -22,7 +22,7 @@ const serveStaticFile = (req, optionalUrl) => {
 const loadComments = function() {
   const COMMENTS_PATH = './data/comments.json';
   if(fs.existsSync(COMMENTS_PATH)) {
-    return JSON.parse(fs.readFileSync('./data/comments.json'));
+    return JSON.parse(fs.readFileSync(COMMENTS_PATH));
   }
   return [];
 };
