@@ -13,8 +13,8 @@ class App {
     this.routes.push({ location, handler, method: 'GET' });
   }
 
-  use(handler) {
-    this.routes.push({ handler });
+  use(middleware) {
+    this.routes.push({ handler: middleware });
   }
 
   post(location, handler) {
@@ -24,9 +24,10 @@ class App {
   connectionListener(req, res) {
     const matchedRoutes = this.routes.filter(route => didMatch(route, req));
       const next = function() {
-      const route = matchedRoutes.shift();
-      route.handler(req, res, next);
-    }
+        if(matchedRoutes.length == 0) return;
+        const route = matchedRoutes.shift();
+        route.handler(req, res, next);
+      }
     next();
   }
 }

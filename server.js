@@ -5,9 +5,10 @@ const handlers = require('./handlers');
 const app = new App();
 
 app.get('/guestBook.html', handlers.serveGuestBookPage);
-app.post('/saveComment', handlers.saveCommentAndRedirect);
 app.get('', handlers.serveStaticFile);
 app.get('', handlers.serveNotFound);
+app.use(handlers.readBody);
+app.post('/saveComment', handlers.saveCommentAndRedirect);
 app.post('', handlers.serveNotFound);
 app.use(handlers.serveBadRequest);
 

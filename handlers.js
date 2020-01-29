@@ -23,11 +23,25 @@ const loadComments = function() {
   return [];
 };
 
+const replaceUnknownChars = function(text) {
+  return decodeURIComponent(text).replace(/\+/g, ' ');
+};
+
 const redirectTo = function(res, url) {
   res.setHeader('Location', url);
   res.statusCode = 301;
   res.end();
 }
+
+const saveCommentAndRedirect = function(req, res) {
+  const comments = loadComments();
+  const date = new Date();
+  const {name, comment} = req.body;
+  const [nameText, commentText] = [name, comment].map(replaceUnknownChars);
+  comments.push({date, name: nameText, comment: commentText});
+  fs.writeFileSync('./data/comments.json',JSON.stringify(comments), 'utf8');
+  return redirectTo(res, '/guestBook.html');
+};
 
 const pickupParams = (query,keyValue)=>{
   const [key,value] = keyValue.split('=');
@@ -35,24 +49,13 @@ const pickupParams = (query,keyValue)=>{
   return query;
 };
 
-const readParams = keyValueTextPairs => keyValueTextPairs.split('&').reduce(pickupParams,{});
-
-const replaceUnknownChars = function(text) {
-  return decodeURIComponent(text).replace(/\+/g, ' ');
-};
-
-const saveCommentAndRedirect = function(req, res) {
-  const comments = loadComments();
-  const date = new Date();
+const readBody = function(req, res, next) {
   let data = '';
-  req.on('data', text => data += text);
+  req.on('data', chunk => data += chunk);
   req.on('end', () => {
-    const {name, comment} = readParams(data);
-    const [nameText, commentText] = [name, comment].map(replaceUnknownChars);
-    comments.push({date, name: nameText, comment: commentText});
-    fs.writeFileSync('./data/comments.json',JSON.stringify(comments), 'utf8');
-    return redirectTo(res, '/guestBook.html');
-  });
+    req.body = data.split('&').reduce(pickupParams, {});
+    next();
+  })
 };
 
 const generateComment = function(commentsHtml, commentDetail) {
@@ -86,4 +89,11 @@ const serveBadRequest = function(req, res) {
   res.send('Bad Request');
 }
 
-module.exports = { serveGuestBookPage, saveCommentAndRedirect, serveStaticFile, serveNotFound, serveBadRequest }
+module.exports = {
+  serveGuestBookPage,
+  saveCommentAndRedirect,
+  serveStaticFile,
+  serveNotFound,
+  serveBadRequest,
+  readBody
+}
