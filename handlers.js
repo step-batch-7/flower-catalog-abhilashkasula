@@ -2,7 +2,6 @@ const fs = require('fs');
 const CONTENT_TYPES = require('./lib/mimeTypes');
 const {loadTemplate} = require('./lib/viewTemplate');
 const STATIC_FOLDER = `${__dirname}/public`;
-const SYMBOLS = require('./lib/symbols');
 
 const serveStaticFile = (req, res, next) => {
   const file = req.url == '/' ? '/home.html' : req.url;
@@ -30,11 +29,6 @@ const redirectTo = function(res, url) {
   res.end();
 }
 
-const replaceUnknownChars = function(text, character) {
-  const regEx = new RegExp(`${character}`, 'g');
-  return text.replace(regEx, SYMBOLS[character]);
-};
-
 const pickupParams = (query,keyValue)=>{
   const [key,value] = keyValue.split('=');
   query[key] = value;
@@ -43,6 +37,10 @@ const pickupParams = (query,keyValue)=>{
 
 const readParams = keyValueTextPairs => keyValueTextPairs.split('&').reduce(pickupParams,{});
 
+const replaceUnknownChars = function(text) {
+  return decodeURIComponent(text).replace(/\+/g, ' ');
+};
+
 const saveCommentAndRedirect = function(req, res) {
   const comments = loadComments();
   const date = new Date();
@@ -50,8 +48,7 @@ const saveCommentAndRedirect = function(req, res) {
   req.on('data', text => data += text);
   req.on('end', () => {
     const {name, comment} = readParams(data);
-    const keys = Object.keys(SYMBOLS);
-    const [nameText, commentText] = [name, comment].map(text => keys.reduce(replaceUnknownChars, text));
+    const [nameText, commentText] = [name, comment].map(replaceUnknownChars);
     comments.push({date, name: nameText, comment: commentText});
     fs.writeFileSync('./data/comments.json',JSON.stringify(comments), 'utf8');
     return redirectTo(res, '/guestBook.html');
