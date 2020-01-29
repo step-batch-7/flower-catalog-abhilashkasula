@@ -1,6 +1,7 @@
 const didMatch = function(route, req) {
-  if(route.method)
-    return route.method == req.method && req.url.match(route.location);
+  if(route.method) {
+    return route.method === req.method && req.url.match(route.location);
+  }
   return true;
 };
 
@@ -10,24 +11,25 @@ class App {
   }
 
   get(location, handler) {
-    this.routes.push({ location, handler, method: 'GET' });
+    this.routes.push({location, handler, method: 'GET'});
   }
 
   use(middleware) {
-    this.routes.push({ handler: middleware });
+    this.routes.push({handler: middleware});
   }
 
   post(location, handler) {
-    this.routes.push({ location, handler, method:'POST' });
+    this.routes.push({location, handler, method: 'POST'});
   }
 
   connectionListener(req, res) {
     const matchedRoutes = this.routes.filter(route => didMatch(route, req));
-      const next = function() {
-        if(matchedRoutes.length == 0) return;
+    const next = function() {
+      if(matchedRoutes.length) {
         const route = matchedRoutes.shift();
         route.handler(req, res, next);
       }
+    };
     next();
   }
 }
