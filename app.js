@@ -1,5 +1,5 @@
 const didMatch = function(route, req) {
-  if(route.method) {
+  if (route.method) {
     return route.method === req.method && req.url.match(route.location);
   }
   return true;
@@ -25,7 +25,7 @@ class App {
   handleRequest(req, res) {
     const matchedRoutes = this.routes.filter(route => didMatch(route, req));
     const next = function() {
-      if(matchedRoutes.length) {
+      if (matchedRoutes.length) {
         const route = matchedRoutes.shift();
         route.handler(req, res, next);
       }

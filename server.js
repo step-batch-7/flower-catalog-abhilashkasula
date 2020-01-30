@@ -21,6 +21,6 @@ const main = (port = defaultPort) => {
   server.listen(port, () => process.stdout.write('server is listening.'));
 };
 
-const [,, port] = process.argv;
+const [, , port] = process.argv;
 
 main(port);

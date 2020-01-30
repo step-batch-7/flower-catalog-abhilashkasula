@@ -15,7 +15,7 @@ const serveStaticFile = function(req, res, next) {
   const reqUrl = getUrl(req.url);
   const path = `${STATIC_FOLDER}${reqUrl}`;
   const stat = fs.existsSync(path) && fs.statSync(path);
-  if (areStatsOK(stat)){
+  if (areStatsOK(stat)) {
     return next();
   }
   const [, extension] = path.match(/.*\.(.*)$/) || [];
@@ -27,7 +27,7 @@ const serveStaticFile = function(req, res, next) {
 
 const loadComments = function() {
   const COMMENTS_PATH = './data/comments.json';
-  if(fs.existsSync(COMMENTS_PATH)) {
+  if (fs.existsSync(COMMENTS_PATH)) {
     return JSON.parse(fs.readFileSync(COMMENTS_PATH));
   }
   return [];
