@@ -15,7 +15,9 @@ const serveStaticFile = function(req, res, next) {
   const reqUrl = getUrl(req.url);
   const path = `${STATIC_FOLDER}${reqUrl}`;
   const stat = fs.existsSync(path) && fs.statSync(path);
-  if (areStatsOK(stat)) return next();
+  if (areStatsOK(stat)){
+    return next();
+  }
   const [, extension] = path.match(/.*\.(.*)$/) || [];
   const contentType = CONTENT_TYPES[extension];
   const content = fs.readFileSync(path);
@@ -59,7 +61,9 @@ const pickupParams = (query, keyValue) => {
 
 const readBody = function(req, res, next) {
   let data = '';
-  req.on('data', chunk => data += chunk);
+  req.on('data', chunk => {
+    data += chunk;
+  });
   req.on('end', () => {
     req.body = data.split('&').reduce(pickupParams, {});
     next();
