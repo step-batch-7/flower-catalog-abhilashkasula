@@ -7,7 +7,7 @@ const getUrl = function(url) {
   return url === '/' ? '/home.html' : url;
 };
 
-const areStatsOK = function(stat) {
+const areStatsNotOk = function(stat) {
   return !stat || !stat.isFile();
 };
 
@@ -15,7 +15,7 @@ const serveStaticFile = function(req, res, next) {
   const reqUrl = getUrl(req.url);
   const path = `${STATIC_FOLDER}${reqUrl}`;
   const stat = fs.existsSync(path) && fs.statSync(path);
-  if (areStatsOK(stat)) {
+  if (areStatsNotOk(stat)) {
     return next();
   }
   const [, extension] = path.match(/.*\.(.*)$/) || [];
@@ -97,8 +97,8 @@ const serveNotFound = function(req, res) {
 };
 
 const serveBadRequest = function(req, res) {
-  res.statusCode = 400;
-  res.end('Bad Request');
+  res.statusCode = 405;
+  res.end('Method Not Allowed');
 };
 
 module.exports = {
