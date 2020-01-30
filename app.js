@@ -22,7 +22,7 @@ class App {
     this.routes.push({location, handler, method: 'POST'});
   }
 
-  connectionListener(req, res) {
+  handleRequest(req, res) {
     const matchedRoutes = this.routes.filter(route => didMatch(route, req));
     const next = function() {
       if(matchedRoutes.length) {

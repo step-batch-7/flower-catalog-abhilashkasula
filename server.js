@@ -14,7 +14,7 @@ app.post('', handlers.serveNotFound);
 app.use(handlers.serveBadRequest);
 
 const main = (port = defaultPort) => {
-  const server = new Server(app.connectionListener.bind(app));
+  const server = new Server(app.handleRequest.bind(app));
   server.listen(port, () => process.stdout.write('server is listening.'));
 };
 
