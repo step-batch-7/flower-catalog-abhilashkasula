@@ -17,4 +17,7 @@ const main = (port = defaultPort) => {
   const server = new Server(app.connectionListener.bind(app));
   server.listen(port, () => process.stdout.write('server is listening.'));
 };
-main(process.argv[2]);
+
+const [,, port] = process.argv;
+
+main(port);

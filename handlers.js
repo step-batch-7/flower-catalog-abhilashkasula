@@ -94,7 +94,7 @@ const serveNotFound = function(req, res) {
 
 const serveBadRequest = function(req, res) {
   res.statusCode = 400;
-  res.send('Bad Request');
+  res.end('Bad Request');
 };
 
 module.exports = {
