@@ -144,13 +144,13 @@ describe('GET', () => {
   });
 
   describe('Guest Book Page', () => {
-    it('should get guestBook.html for /guestBook.html', done => {
+    it('should get guestBook.html with generated comments for /guestBook.html', done => {
       request(app.handleRequest.bind(app))
         .get('/guestBook.html')
         .set('Accept', '*/*')
         .expect(statusCodes.OK)
         .expect('Content-Type', 'text/html')
-        .expect('Content-length', '895')
+        .expect('Content-length', '1002')
         .expect(/<title>Guest Book<\/title>/, done);
     });
 
