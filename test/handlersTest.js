@@ -5,7 +5,9 @@ const fs = require('fs');
 
 const statusCodes = {
   OK: 200,
-  REDIRECT: 301
+  REDIRECT: 301,
+  NOT_FOUND: 404,
+  INVALID_METHOD: 405
 };
 
 describe('GET', () => {
@@ -162,11 +164,23 @@ describe('GET', () => {
         .expect(/.header {/, done);
     });
   });
+
+  describe('Not Found', () => {
+    it('should get Not Found message for a false url requested', (done) => {
+      request(app.handleRequest.bind(app))
+        .get('/falseUrl')
+        .set('Accept', '*/*')
+        .expect(statusCodes.NOT_FOUND)
+        .expect('Content-Length', '9')
+        .expect(/Not Found/, done);
+    });
+  });
 });
 
 describe('POST', () => {
   describe('saveComment', () => {
     beforeEach(() => sinon.replace(fs, 'writeFileSync', () => {}));
+    afterEach(() => sinon.restore());
 
     it('should save comment and redirect to guestBook page', done => {
       request(app.handleRequest.bind(app))
@@ -176,7 +190,27 @@ describe('POST', () => {
         .expect(statusCodes.REDIRECT)
         .expect('Location', '/guestBook.html', done);
     });
+  });
 
-    afterEach(() => sinon.restore());
+  describe('Page Not Found', () => {
+    it('should get Not Found message for a false url requested', (done) => {
+      request(app.handleRequest.bind(app))
+        .post('/falseUrl')
+        .send('name=abhi&comment=awesome')
+        .expect(statusCodes.NOT_FOUND)
+        .expect('Content-Length', '9')
+        .expect(/Not Found/, done);
+    });
+  });
+});
+
+describe('Method Not Found', () => {
+  it('should get Not Found message for a false url requested', (done) => {
+    request(app.handleRequest.bind(app))
+      .put('/someUrl')
+      .set('Accept', '*/*')
+      .expect(statusCodes.INVALID_METHOD)
+      .expect('Content-Length', '18')
+      .expect(/Method Not Allowed/, done);
   });
 });
