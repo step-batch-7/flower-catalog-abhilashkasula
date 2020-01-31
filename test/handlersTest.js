@@ -1,8 +1,11 @@
 const request = require('supertest');
 const {app} = require('../lib/handlers');
+const sinon = require('sinon');
+const fs = require('fs');
 
 const statusCodes = {
-  'OK': 200
+  'OK': 200,
+  'REDIRECT': 301
 };
 
 describe('GET Home page', () => {
@@ -135,4 +138,41 @@ describe('GET Ageratum page', () => {
       .expect('Content-Type', 'application/pdf')
       .expect('Content-length', '140228', done);
   });
+});
+
+describe('GET Guest Book Page', () => {
+  it('should get guestBook.html for /guestBook.html', (done) => {
+    request(app.handleRequest.bind(app))
+      .get('/guestBook.html')
+      .set('Accept', '*/*')
+      .expect(statusCodes.OK)
+      .expect('Content-Type', 'text/html')
+      .expect('Content-length', '895')
+      .expect(/<title>Guest Book<\/title>/, done);
+  });
+
+  it('should get index.css for /css/index.css path', (done) => {
+    request(app.handleRequest.bind(app))
+      .get('/css/index.css')
+      .set('Accept', '*/*')
+      .expect(statusCodes.OK)
+      .expect('Content-Type', 'text/css')
+      .expect('Content-length', '787')
+      .expect(/.header {/, done);
+  });
+});
+
+describe('POST saveComment', () => {
+  beforeEach(() => sinon.replace(fs, 'writeFileSync', () => {}));
+
+  it('should save comment and redirect to guestBook page', (done) => {
+    request(app.handleRequest.bind(app))
+      .post('/saveComment')
+      .send('name=abhi&comment=awesome')
+      .set('Accept', '*/*')
+      .expect(statusCodes.REDIRECT)
+      .expect('Location', '/guestBook.html', done);
+  });
+
+  afterEach(() => sinon.restore());
 });
