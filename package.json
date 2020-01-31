@@ -7,8 +7,11 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "test": "mocha",
+    "lint": "eslint *.js lib/*.js test/*.js public/js/*.js",
+    "cover": "nyc npm test",
+    "start": "node server.js",
+    "alltests": "npm run cover && npm run lint"
   },
   "repository": {
     "type": "git",
