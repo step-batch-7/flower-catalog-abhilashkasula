@@ -5,7 +5,7 @@ const statusCodes = {
   'OK': 200
 };
 
-describe('GET homepage', () => {
+describe('GET Home page', () => {
   it('should get home.html / path', (done) => {
     request(app.handleRequest.bind(app))
       .get('/')
@@ -54,5 +54,45 @@ describe('GET homepage', () => {
       .expect(statusCodes.OK)
       .expect('Content-Type', 'image/gif')
       .expect('Content-length', '65088', done);
+  });
+});
+
+describe('GET Abeliophyllum page', () => {
+  it('should get abeliophyllum.html for /abeliophyllum.html', (done) => {
+    request(app.handleRequest.bind(app))
+      .get('/abeliophyllum.html')
+      .set('Accept', '*/*')
+      .expect(statusCodes.OK)
+      .expect('Content-Type', 'text/html')
+      .expect('Content-length', '1666')
+      .expect(/<title>Abeliophyllum<\/title>/, done);
+  });
+
+  it('should get index.css for /css/index.css path', (done) => {
+    request(app.handleRequest.bind(app))
+      .get('/css/index.css')
+      .set('Accept', '*/*')
+      .expect(statusCodes.OK)
+      .expect('Content-Type', 'text/css')
+      .expect('Content-length', '787')
+      .expect(/.header {/, done);
+  });
+
+  it('should get abeliophyllum for /images/abeliophyllum.jpg path', (done) => {
+    request(app.handleRequest.bind(app))
+      .get('/images/abeliophyllum.jpg')
+      .set('Accept', '*/*')
+      .expect(statusCodes.OK)
+      .expect('Content-Type', 'image/jpg')
+      .expect('Content-length', '87413', done);
+  });
+
+  it('should get Abeliophyllum pdf for /assets/abeliophyllum.pdf', (done) => {
+    request(app.handleRequest.bind(app))
+      .get('/assets/abeliophyllum.pdf')
+      .set('Accept', '*/*')
+      .expect(statusCodes.OK)
+      .expect('Content-Type', 'application/pdf')
+      .expect('Content-length', '35864', done);
   });
 });
