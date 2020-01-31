@@ -96,3 +96,43 @@ describe('GET Abeliophyllum page', () => {
       .expect('Content-length', '35864', done);
   });
 });
+
+describe('GET Ageratum page', () => {
+  it('should get ageratum.html for /ageratum.html', (done) => {
+    request(app.handleRequest.bind(app))
+      .get('/ageratum.html')
+      .set('Accept', '*/*')
+      .expect(statusCodes.OK)
+      .expect('Content-Type', 'text/html')
+      .expect('Content-length', '1415')
+      .expect(/<title>Ageratum<\/title>/, done);
+  });
+
+  it('should get index.css for /css/index.css path', (done) => {
+    request(app.handleRequest.bind(app))
+      .get('/css/index.css')
+      .set('Accept', '*/*')
+      .expect(statusCodes.OK)
+      .expect('Content-Type', 'text/css')
+      .expect('Content-length', '787')
+      .expect(/.header {/, done);
+  });
+
+  it('should get ageratum for /images/ageratum.jpg path', (done) => {
+    request(app.handleRequest.bind(app))
+      .get('/images/ageratum.jpg')
+      .set('Accept', '*/*')
+      .expect(statusCodes.OK)
+      .expect('Content-Type', 'image/jpg')
+      .expect('Content-length', '55554', done);
+  });
+
+  it('should get Ageratum pdf for /assets/ageratum.pdf', (done) => {
+    request(app.handleRequest.bind(app))
+      .get('/assets/ageratum.pdf')
+      .set('Accept', '*/*')
+      .expect(statusCodes.OK)
+      .expect('Content-Type', 'application/pdf')
+      .expect('Content-length', '140228', done);
+  });
+});
