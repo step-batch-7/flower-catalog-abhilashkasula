@@ -107,5 +107,15 @@
                 "max-statements": "off"
             }
         }
+    ],
+    "overrides": [
+        {
+            "files": [
+                "public/js/*.js"
+            ],
+            "rules": {
+                "no-unused-vars": "off"
+            }
+        }
     ]
 }
