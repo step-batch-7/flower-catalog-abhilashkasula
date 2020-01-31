@@ -144,7 +144,7 @@ describe('GET', () => {
   });
 
   describe('Guest Book Page', () => {
-    it('should get guestBook.html with generated comments for /guestBook.html', done => {
+    it('should get guestBook.html with comments for /guestBook.html', done => {
       request(app.handleRequest.bind(app))
         .get('/guestBook.html')
         .set('Accept', '*/*')
