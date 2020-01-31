@@ -1,4 +1,5 @@
 const fs = require('fs');
+const App = require('./app');
 const CONTENT_TYPES = require('./lib/mimeTypes');
 const {loadTemplate} = require('./lib/viewTemplate');
 const STATIC_FOLDER = `${__dirname}/public`;
@@ -101,11 +102,17 @@ const serveBadRequest = function(req, res) {
   res.end('Method Not Allowed');
 };
 
-module.exports = {
-  serveGuestBookPage,
-  saveCommentAndRedirect,
-  serveStaticFile,
-  serveNotFound,
-  serveBadRequest,
-  readBody
-};
+const app = new App();
+
+app.get('/guestBook.html', serveGuestBookPage);
+app.get('', serveStaticFile);
+app.get('', serveNotFound);
+
+app.use(readBody);
+
+app.post('/saveComment', saveCommentAndRedirect);
+app.post('', serveNotFound);
+
+app.use(serveBadRequest);
+
+module.exports = {app};
