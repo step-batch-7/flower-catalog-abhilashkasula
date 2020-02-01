@@ -106,9 +106,7 @@
                 "no-magic-numbers": "off",
                 "max-statements": "off"
             }
-        }
-    ],
-    "overrides": [
+        },
         {
             "files": [
                 "public/js/*.js"
